@@ -23,7 +23,7 @@ const Main = () => {
   const [selectedReceive, setSelectedReceive] = useState();
 
   const [send_token_amount, set_send_token_amount] = useState("");
-  const [recieve_token_amount, set_recieve_token_amount] = useState("0");
+  const [recieve_token_amount, set_recieve_token_amount] = useState("");
 
   const [matic_in_dollar, set_matic_in_dollar] = useState("0");
   const [usdt_balance, set_usdt_balance] = useState("0");
@@ -47,10 +47,14 @@ const Main = () => {
 
   const filteredTokensList = tokensList.filter(
     (item) =>
-      item.title !== selectedReceive?.title &&       item.title !== selectedPay?.title
+      item.title !== selectedPay?.title      
 
   );
+  const filteredTokensList_rec = tokensList.filter(
+    (item) =>
+      item.title !== selectedReceive?.title
 
+  );
 
   const CHAIN_ID = "80001";
   const CHAIN_ID1 = "0x13881";
@@ -348,6 +352,17 @@ function swap()
     alert("Kindly connect your wallet");
     return;
   }
+  if(send_token_amount=="" || send_token_amount=="0")
+  {
+    alert("Kidly write the amount");
+    return;
+  }
+  if(selectedPay.title==selectedReceive.title)
+  {
+    alert("wrong pair");
+    return;
+  }
+
   if((selectedReceive.title == "USDT" && selectedPay.title =="PPKT") || (selectedReceive.title == "PPKT" && selectedPay.title =="USDT") )
   {
     if(selectedPay.title =="PPKT")
@@ -524,7 +539,7 @@ function swap()
                     <DropDown
                       selected={selectedReceive}
                       setSelected={setSelectedReceive}
-                      filteredTokensList={filteredTokensList}
+                      filteredTokensList={filteredTokensList_rec}
                       onSend_expected_reciving={onSend_expected_reciving}
                       onRecieve_expected_reciving={onRecieve_expected_reciving}
                       send_token_amount={send_token_amount}
@@ -537,11 +552,11 @@ function swap()
               <div className="info-list flex flex-col w-full">
                 <div className="info-item flex items-center justify-between w-full">
                   <h1 className="lbl">Amount Deduction</h1>
-                  <h1 className="val">{(recieve_token_amount*1/100)} {selectedReceive?(selectedReceive.title):("")}</h1>
+                  <h1 className="val">{(Number(recieve_token_amount)*1/100)} {selectedReceive?(selectedReceive.title):("")}</h1>
                 </div>
                 <div className="info-item flex items-center justify-between w-full">
                   <h1 className="lbl">Expected Token</h1>
-                  <h1 className="val">{recieve_token_amount-(recieve_token_amount*1/100)} {selectedReceive?(selectedReceive.title):("")}</h1>
+                  <h1 className="val">{Number(recieve_token_amount)-(Number(recieve_token_amount)*1/100)} {selectedReceive?(selectedReceive.title):("")}</h1>
                 </div>
               </div>
               <button className="btn-connect button" onClick={swap}>Swap</button>
